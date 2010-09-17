@@ -5,11 +5,13 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "wikimate"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{simple static wiki like site builder.}
+    gem.description = %Q{A simple, Markdown processor for static wiki like site.}
     gem.email = "arthur.petry@bolloretelecom.eu"
     gem.homepage = "http://github.com/arthur/wikimate"
     gem.authors = ["Arthur Petry"]
+    gem.add_dependency('rdiscount', "~> 1.6")
+    gem.add_dependency('rack', "~> 1.0")
     gem.add_development_dependency "rspec", ">= 1.2.9"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
