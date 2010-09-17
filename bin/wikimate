@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
+
+help = <<HELP
+Wikimate is a markdown interpreter with wikilinks (without any historic display, use your cvs for that).
+
+Basic Command Line Usage:
+  wikimate [OPTIONS] [PATH]
+
+        PATH                         The path to your markdown directory.
+
+Options:
+HELP
+
+require 'optparse'
+require 'rubygems'
+require 'wikimate'
+
+exec = {}
+options = {}
+opts = OptionParser.new do |opts|
+  opts.banner = help
+
+  opts.on("--port [PORT]", "Bind port (default 3456).") do |port|
+    options['port'] = port.to_i
+  end
+
+  opts.on("--version", "Display current version.") do
+    puts "Wikimate " + Wikimate::VERSION
+    exit 0
+  end
+
+  opts.on("--build", "build static files instead of launching server.") do
+    options['build'] = true
+  end
+end
+
+# Read command line options into `options` hash
+begin
+  opts.parse!
+rescue OptionParser::InvalidOption
+  puts "wikimate: #{$!.message}"
+  puts "wikimate: try 'wikimate --help' for more information"
+  exit
+end
+
+root_path = ARGV[0] || Dir.pwd
+
+if options['build']
+else
+  server = Wikimate::Server.new(root_path, options)
+  server.run
+end
