@@ -26,6 +26,10 @@ opts = OptionParser.new do |opts|
     options['port'] = port.to_i
   end
 
+  opts.on("--prefix [PREFIX]", "Prefix url (like /wiki ).") do |prefix|
+    options['prefix'] = prefix
+  end
+
   opts.on("--version", "Display current version.") do
     puts "Wikimate " + Wikimate::VERSION
     exit 0
@@ -48,6 +52,8 @@ end
 root_path = ARGV[0] || Dir.pwd
 
 if options['build']
+  builder = Wikimate::Builder.new(root_path, "html", options)
+  builder.run
 else
   server = Wikimate::Server.new(root_path, options)
   server.run

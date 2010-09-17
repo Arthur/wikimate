@@ -24,7 +24,7 @@ module Wikimate
     end
 
     def interpreter
-      @interpreter ||= Interpreter.new(@root)
+      @interpreter ||= Interpreter.new(@root, @options.merge("edit_links" => true))
     end
 
     def call(env)

@@ -9,32 +9,41 @@ module Wikimate
   </head>
 EOS
 
-FOOTER = <<EOS
-  <p class="footer"><a href="/Index.html">Index</a> | <a href="/AllPages.html">AllPages</a></p>
-EOS
+    attr_reader :path
 
-    attr_reader :path, :pages
-
-    def initialize(path)
+    def initialize(path, options)
       @path = File.expand_path(path)
-      get_pages
+      @options = options
     end
 
-    def get_pages
+    def pages
+      return @pages if @pages
       @pages = Dir[path+'/*.md'].map do |md_filename|
         File.basename(md_filename,'.md')
       end
       @pages << 'AllPages'
     end
 
+    def prefix
+      @options["prefix"] || ""
+    end
+
+    def footer
+      %Q(<p class="footer"><a href="#{prefix}/Index.html">Index</a> | <a href="#{prefix}/AllPages.html">AllPages</a></p>)
+    end
+
     def links_in_md
       @links_in_md ||= pages.map do |page|
-        "  [#{page}]: #{page}.html \"#{page}\"\n"
+        "  [#{page}]: #{prefix}/#{page}.html \"#{page}\"\n"
       end.join
     end
 
     def header
       HEADER
+    end
+
+    def edit_links?
+      @options["edit_links"]
     end
 
     def html_for_page(page, options = {})
@@ -59,8 +68,7 @@ EOS
         paragraphs = []
         lines = markdown.split("\n")
         lines.each_with_index do |line, line_number|
-          if line =~ /^#+/
-            # line += "\n[edit](txmt://open/?url=file://#{md_filename}&line=#{line_number+2})"
+          if edit_links? && line =~ /^#+/
             line += " <a href=\"txmt://open/?url=file://#{md_filename}&line=#{line_number+2}\" class=\"edit\">edit</a>"
             lines[line_number]=line
           end
@@ -72,7 +80,7 @@ EOS
 
       html = RDiscount.new(markdown).to_html
       html = "<h1 class=\"title\">#{page}</h1>\n" + html
-      header.sub('TITLE', page) + "<body>" + html + FOOTER + "</body>" + '</html>'
+      header.sub('TITLE', page) + "<body>" + html + footer + "</body>" + '</html>'
     end
 
   end
