@@ -1,6 +1,19 @@
 # wikimate
 
-Description goes here.
+Tool to make a wiki-like web site, storage in git, pages are in markdown format.
+You can directly edit the pages, an wikimate build static html pages from them, or you can use wikimate as a server, to have direct previsualisation, with link to textmate for editing each paragraph.
+
+## Usage
+
+    wikimate path_to_markdown_dir   # launch the server
+    wikimate --build                # make static html files in html/ dir.
+
+## Install
+
+Not an official gem yet, so :
+
+    git clone https://github.com/Arthur/wikimate.git
+    cd wikimate && rake install
 
 ## Note on Patches/Pull Requests
  
