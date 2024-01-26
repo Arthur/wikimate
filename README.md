@@ -28,3 +28,4 @@ Not an official gem yet, so :
 ## Copyright
 
 Copyright (c) 2010 Arthur Petry. See LICENSE for details.
+OBS:
